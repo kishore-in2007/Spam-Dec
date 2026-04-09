@@ -19,4 +19,4 @@ COPY . .
 # Render sets PORT; default to 10000 if not provided
 ENV PORT=10000
 
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:${PORT}"]
+CMD ["sh", "-c", "gunicorn app:app --bind 0.0.0.0:${PORT}"]
