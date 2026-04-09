@@ -1,12 +1,17 @@
-FROM python:3.10-slim
+FROM python:3.10
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# System deps for OCR
+# System deps for OCR + Python wheels/builds
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     poppler-utils \
+    build-essential \
+    gfortran \
+    libopenblas-dev \
+    liblapack-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
