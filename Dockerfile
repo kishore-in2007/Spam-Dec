@@ -18,7 +18,9 @@ WORKDIR /app
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
-RUN pip install --no-cache-dir --prefer-binary -r requirements.txt
+RUN pip install --no-cache-dir --only-binary=:all: numpy==1.26.4
+RUN pip install --no-cache-dir --only-binary=:all: scikit-learn==1.4.2
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
