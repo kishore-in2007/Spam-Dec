@@ -166,6 +166,25 @@ function saveBaseUrl() {
   localStorage.setItem("SPAMDECK_API_BASE", (baseInput.value || "").trim());
 }
 
+function showError(msg) {
+  const result = document.getElementById("result");
+  result.style.color = "#ff7a7a";
+  result.innerText = "Error: " + msg;
+}
+
+async function safeFetch(url, options) {
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    let msg = "Request failed: " + res.status;
+    try {
+      const data = await res.json();
+      if (data && data.error) msg = data.error;
+    } catch (e) {}
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
 function showTab(tab, event) {
   document.getElementById("textTab").style.display = "none";
   document.getElementById("urlTab").style.display = "none";
@@ -184,30 +203,36 @@ function showTab(tab, event) {
 async function checkText() {
   const text = document.getElementById("textInput").value;
 
-  const res = await fetch(getBaseUrl() + "/predict/spam", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({text: text})
-  });
-
-  const data = await res.json();
-  document.getElementById("result").innerText =
-    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+  try {
+    const data = await safeFetch(getBaseUrl() + "/predict/spam", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({text: text})
+    });
+    document.getElementById("result").style.color = "#38bdf8";
+    document.getElementById("result").innerText =
+      "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+  } catch (e) {
+    showError(e.message);
+  }
 }
 
 // URL
 async function checkURL() {
   const url = document.getElementById("urlInput").value;
 
-  const res = await fetch(getBaseUrl() + "/predict/url", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({url: url})
-  });
-
-  const data = await res.json();
-  document.getElementById("result").innerText =
-    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+  try {
+    const data = await safeFetch(getBaseUrl() + "/predict/url", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({url: url})
+    });
+    document.getElementById("result").style.color = "#38bdf8";
+    document.getElementById("result").innerText =
+      "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+  } catch (e) {
+    showError(e.message);
+  }
 }
 
 // IMAGE
@@ -216,14 +241,17 @@ async function checkImage() {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(getBaseUrl() + "/predict/image", {
-    method: "POST",
-    body: formData
-  });
-
-  const data = await res.json();
-  document.getElementById("result").innerText =
-    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+  try {
+    const data = await safeFetch(getBaseUrl() + "/predict/image", {
+      method: "POST",
+      body: formData
+    });
+    document.getElementById("result").style.color = "#38bdf8";
+    document.getElementById("result").innerText =
+      "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+  } catch (e) {
+    showError(e.message);
+  }
 }
 
 // PREVIEW IMAGE
