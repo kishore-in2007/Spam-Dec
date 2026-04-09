@@ -143,10 +143,28 @@
     <div id="preview"></div>
 
   </div>
+
+  <div style="margin-top:20px;text-align:left;">
+    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:6px;">API Base URL</label>
+    <input id="apiBase" type="text" placeholder="https://your-backend.onrender.com" style="width:100%;">
+    <button onclick="saveBaseUrl()" style="margin-top:10px;width:auto;padding:10px 16px;">Save</button>
+    <div style="font-size:12px;color:#94a3b8;margin-top:6px;">Set once. We store it locally in your browser.</div>
+  </div>
 </div>
 
 <script>
-const BASE_URL = "http://127.0.0.1:5000";
+const baseInput = document.getElementById("apiBase");
+const stored = localStorage.getItem("SPAMDECK_API_BASE");
+baseInput.value = stored || "";
+
+function getBaseUrl() {
+  const val = (baseInput.value || "").trim();
+  return val || "http://127.0.0.1:5000";
+}
+
+function saveBaseUrl() {
+  localStorage.setItem("SPAMDECK_API_BASE", (baseInput.value || "").trim());
+}
 
 function showTab(tab, event) {
   document.getElementById("textTab").style.display = "none";
@@ -166,7 +184,7 @@ function showTab(tab, event) {
 async function checkText() {
   const text = document.getElementById("textInput").value;
 
-  const res = await fetch(BASE_URL + "/predict/spam", {
+  const res = await fetch(getBaseUrl() + "/predict/spam", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({text: text})
@@ -181,7 +199,7 @@ async function checkText() {
 async function checkURL() {
   const url = document.getElementById("urlInput").value;
 
-  const res = await fetch(BASE_URL + "/predict/url", {
+  const res = await fetch(getBaseUrl() + "/predict/url", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({url: url})
@@ -198,7 +216,7 @@ async function checkImage() {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(BASE_URL + "/predict/image", {
+  const res = await fetch(getBaseUrl() + "/predict/image", {
     method: "POST",
     body: formData
   });
