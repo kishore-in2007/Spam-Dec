@@ -2,312 +2,151 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SpamDeck</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Sora:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-1: #0b1020;
-      --bg-2: #101828;
-      --panel: #121c2f;
-      --panel-2: #0d1526;
-      --accent: #00d2ff;
-      --accent-2: #7bffb7;
-      --text: #e6eef7;
-      --muted: #9fb2c8;
-      --danger: #ff5d5d;
-      --ok: #3ddc97;
-    }
-
-    * { box-sizing: border-box; }
-
     body {
       margin: 0;
-      font-family: "Sora", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(0,210,255,0.12), transparent 60%),
-        radial-gradient(900px 600px at 90% 20%, rgba(123,255,183,0.12), transparent 60%),
-        linear-gradient(160deg, var(--bg-1), var(--bg-2));
-      min-height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0f172a, #020617);
+      color: white;
     }
 
     .app {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 24px;
-    }
-
-    .hero {
-      padding: 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 20px;
+      text-align: center;
     }
 
     .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      padding: 8px;
-      background: rgba(0,210,255,0.15);
-      border: 1px solid rgba(0,210,255,0.3);
+      width: 90px;
+      margin-bottom: 10px;
     }
 
     h1 {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 32px;
-      margin: 0;
+      margin: 5px 0;
+      font-size: 36px;
     }
 
     .subtitle {
-      color: var(--muted);
-      line-height: 1.5;
-      margin-top: 8px;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(0,210,255,0.12);
-      border: 1px solid rgba(0,210,255,0.35);
-      font-size: 12px;
-      margin-top: 18px;
-    }
-
-    .panel {
-      background: var(--panel);
-      border-radius: 20px;
-      padding: 22px;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+      color: #94a3b8;
+      margin-bottom: 30px;
     }
 
     .tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
     .tab {
-      text-align: center;
-      padding: 10px 12px;
+      padding: 12px 22px;
       border-radius: 12px;
-      background: var(--panel-2);
+      background: #1e293b;
       cursor: pointer;
-      border: 1px solid transparent;
-      transition: 0.2s ease;
-      font-weight: 600;
-      font-family: "Space Grotesk", sans-serif;
+      transition: 0.3s;
     }
 
     .tab.active {
-      border-color: rgba(0,210,255,0.6);
-      background: rgba(0,210,255,0.12);
+      background: #0ea5e9;
     }
 
-    label {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
+    .box {
+      background: #0b1220;
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 10px;
+      box-shadow: 0 0 20px rgba(14,165,233,0.2);
     }
 
     textarea, input {
       width: 100%;
       padding: 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.08);
-      outline: none;
-      background: #0b1324;
-      color: var(--text);
-      font-family: "Sora", sans-serif;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    button {
-      padding: 12px 18px;
-      border-radius: 12px;
+      border-radius: 10px;
       border: none;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: "Space Grotesk", sans-serif;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      color: #07131f;
-      cursor: pointer;
-    }
-
-    .secondary {
-      background: #13223b;
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.08);
+      outline: none;
+      margin-top: 10px;
+      background: #1e293b;
+      color: white;
     }
 
     .upload-area {
-      border: 2px dashed rgba(0,210,255,0.6);
-      border-radius: 16px;
-      padding: 28px;
-      text-align: center;
+      border: 2px dashed #0ea5e9;
+      border-radius: 15px;
+      padding: 40px;
       cursor: pointer;
-      margin-top: 12px;
-      color: var(--muted);
-      background: rgba(0,210,255,0.05);
+      margin-top: 15px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+      background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+      color: white;
+      cursor: pointer;
     }
 
     .result {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 12px;
-      background: #0b1324;
-      border: 1px solid rgba(255,255,255,0.08);
-      display: none;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #38bdf8;
     }
 
-    .result strong {
-      font-family: "Space Grotesk", sans-serif;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      margin-left: 8px;
-    }
-
-    .status.spam { background: rgba(255,93,93,0.15); color: var(--danger); }
-    .status.safe { background: rgba(61,220,151,0.15); color: var(--ok); }
-
-    #preview img {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-top: 12px;
-    }
-
-    .api-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .api-hint {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-
-    @media (max-width: 900px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
+    #preview {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
 <div class="app">
-  <section class="hero">
-    <div class="brand">
-      <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" class="logo" alt="SpamDeck logo">
-      <div>
-        <h1>SpamDeck</h1>
-        <div class="subtitle">AI powered spam detection for text, URLs, and images</div>
-      </div>
-    </div>
-    <div class="subtitle">
-      Choose a detection mode on the right, send input, and see confidence plus model response.
-      You can point the UI to your hosted API using the base URL input.
-    </div>
-    <div class="pill">Multi-model screening with URL and OCR support</div>
-  </section>
+  <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" class="logo">
+  <h1>SpamDeck</h1>
+  <div class="subtitle">AI Powered Spam Detection System</div>
 
-  <section class="panel">
-    <div class="tabs">
-      <div class="tab active" onclick="showTab('text', event)">Text</div>
-      <div class="tab" onclick="showTab('url', event)">URL</div>
-      <div class="tab" onclick="showTab('image', event)">Image</div>
-    </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('text', event)">📄 Text</div>
+    <div class="tab" onclick="showTab('url', event)">🔗 URL</div>
+    <div class="tab" onclick="showTab('image', event)">🖼 Image</div>
+  </div>
+
+  <div class="box">
 
     <!-- TEXT -->
     <div id="textTab">
-      <label for="textInput">Message</label>
-      <textarea id="textInput" rows="5" placeholder="Paste message text..."></textarea>
-      <div class="actions">
-        <button onclick="checkText()">Detect Spam</button>
-        <button class="secondary" onclick="checkAll()">Use All Models</button>
-      </div>
+      <textarea id="textInput" rows="4" placeholder="Enter message text..."></textarea>
+      <button onclick="checkText()">Detect Spam</button>
     </div>
 
     <!-- URL -->
     <div id="urlTab" style="display:none;">
-      <label for="urlInput">URL</label>
-      <input type="text" id="urlInput" placeholder="https://example.com">
-      <div class="actions">
-        <button onclick="checkURL()">Detect Spam</button>
-      </div>
+      <input type="text" id="urlInput" placeholder="Enter URL...">
+      <button onclick="checkURL()">Detect Spam</button>
     </div>
 
     <!-- IMAGE -->
     <div id="imageTab" style="display:none;">
       <div class="upload-area" onclick="document.getElementById('imageFile').click()">
-        Click to upload an image for OCR
+        Click to upload Image
       </div>
       <input type="file" id="imageFile" hidden accept="image/*" onchange="previewImage()">
-      <div class="actions">
-        <button onclick="checkImage()">Detect Spam</button>
-      </div>
+      <button onclick="checkImage()">Detect Spam</button>
     </div>
 
     <div class="result" id="result"></div>
     <div id="preview"></div>
 
-    <div class="api-row">
-      <div>
-        <label for="apiBase">API Base URL</label>
-        <input id="apiBase" type="text" placeholder="https://your-backend.onrender.com">
-        <div class="api-hint">Set once. We store it locally in your browser.</div>
-      </div>
-      <button class="secondary" onclick="saveBaseUrl()">Save</button>
-    </div>
-  </section>
+  </div>
 </div>
 
 <script>
-const baseInput = document.getElementById("apiBase");
-const stored = localStorage.getItem("SPAMDECK_API_BASE");
-baseInput.value = stored || "";
-
-function getBaseUrl() {
-  const val = (baseInput.value || "").trim();
-  return val || "http://127.0.0.1:5000";
-}
-
-function saveBaseUrl() {
-  localStorage.setItem("SPAMDECK_API_BASE", (baseInput.value || "").trim());
-}
+const BASE_URL = "http://127.0.0.1:5000";
 
 function showTab(tab, event) {
   document.getElementById("textTab").style.display = "none";
@@ -319,98 +158,54 @@ function showTab(tab, event) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   event.target.classList.add("active");
 
-  document.getElementById("result").style.display = "none";
-  document.getElementById("result").innerHTML = "";
+  document.getElementById("result").innerText = "";
   document.getElementById("preview").innerHTML = "";
-}
-
-function showResult(data) {
-  const resultEl = document.getElementById("result");
-  const status = data.result === "Spam" ? "spam" : "safe";
-  resultEl.style.display = "block";
-  resultEl.innerHTML = `
-    <strong>Result:</strong> ${data.result}
-    <span class="status ${status}">${data.result === "Spam" ? "Flagged" : "Clean"}</span>
-    <div style="margin-top:6px;color:var(--muted);">
-      Confidence: ${Number(data.confidence).toFixed(2)}%
-    </div>
-  `;
-}
-
-async function safeFetch(url, options) {
-  const res = await fetch(url, options);
-  if (!res.ok) {
-    throw new Error("Request failed: " + res.status);
-  }
-  return res.json();
 }
 
 // TEXT
 async function checkText() {
-  const text = document.getElementById("textInput").value.trim();
-  if (!text) return;
+  const text = document.getElementById("textInput").value;
 
-  try {
-    const data = await safeFetch(getBaseUrl() + "/predict/spam", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({text: text})
-    });
-    showResult(data);
-  } catch (e) {
-    showError(e);
-  }
-}
+  const res = await fetch(BASE_URL + "/predict/spam", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({text: text})
+  });
 
-async function checkAll() {
-  const text = document.getElementById("textInput").value.trim();
-  if (!text) return;
-
-  try {
-    const data = await safeFetch(getBaseUrl() + "/predict/all", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({text: text})
-    });
-    showResult(data);
-  } catch (e) {
-    showError(e);
-  }
+  const data = await res.json();
+  document.getElementById("result").innerText =
+    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
 }
 
 // URL
 async function checkURL() {
-  const url = document.getElementById("urlInput").value.trim();
-  if (!url) return;
+  const url = document.getElementById("urlInput").value;
 
-  try {
-    const data = await safeFetch(getBaseUrl() + "/predict/url", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({url: url})
-    });
-    showResult(data);
-  } catch (e) {
-    showError(e);
-  }
+  const res = await fetch(BASE_URL + "/predict/url", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({url: url})
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerText =
+    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
 }
 
 // IMAGE
 async function checkImage() {
   const file = document.getElementById("imageFile").files[0];
-  if (!file) return;
   const formData = new FormData();
   formData.append("file", file);
 
-  try {
-    const data = await safeFetch(getBaseUrl() + "/predict/image", {
-      method: "POST",
-      body: formData
-    });
-    showResult(data);
-  } catch (e) {
-    showError(e);
-  }
+  const res = await fetch(BASE_URL + "/predict/image", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerText =
+    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
 }
 
 // PREVIEW IMAGE
@@ -420,15 +215,9 @@ function previewImage(){
   const reader = new FileReader();
   reader.onload = function(e){
     document.getElementById("preview").innerHTML =
-      `<img src="${e.target.result}" alt="Preview">`;
+      `<img src="${e.target.result}" style="max-width:100%;border-radius:12px;">`;
   };
   reader.readAsDataURL(file);
-}
-
-function showError(err) {
-  const resultEl = document.getElementById("result");
-  resultEl.style.display = "block";
-  resultEl.innerHTML = `<strong>Error:</strong> ${err.message}`;
 }
 </script>
 
