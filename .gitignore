@@ -10,6 +10,12 @@ Thumbs.db
 *.zip
 *.h5
 *.pkl
+!final_vectorizer.pkl
+!final_model.pkl
+!label_encoder.pkl
+!url_vectorizer.pkl
+!url_model.pkl
+!url_label_encoder.pkl
 models/
 data/
 temp_*
