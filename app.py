@@ -28,9 +28,9 @@ CORS(app)
 # ---------------- LOAD MODELS ---------------- #
 
 # Legacy TF-IDF + Logistic Regression spam model
-VECTORIZER_PATH = "final_vectorizer.pkl"
-MODEL_PATH = "final_model.pkl"
-LABEL_ENCODER_PATH = "label_encoder.pkl"
+VECTORIZER_PATH = "final_vectorizer_v2.pkl"
+MODEL_PATH = "final_model_v2.pkl"
+LABEL_ENCODER_PATH = "label_encoder_v2.pkl"
 URL_VECTORIZER_PATH = "url_vectorizer.pkl"
 URL_MODEL_PATH = "url_model.pkl"
 URL_LABEL_ENCODER_PATH = "url_label_encoder.pkl"
@@ -260,62 +260,77 @@ def extract_text_from_pdf(pdf_path):
 
 @app.route("/predict/spam", methods=["POST"])
 def predict_spam():
-    data = request.get_json()
-    text = data.get("text", "")
-    result, confidence, meta = multi_stage_predict(text)
-    return jsonify({"result": result, "confidence": confidence, **meta})
+    try:
+        data = request.get_json(silent=True) or {}
+        text = data.get("text", "")
+        result, confidence, meta = multi_stage_predict(text)
+        return jsonify({"result": result, "confidence": confidence, **meta})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/predict/url", methods=["POST"])
 def predict_url():
-    data = request.get_json()
-    url = data.get("url", "")
-    result, confidence, meta = multi_stage_predict(url)
-    return jsonify({"result": result, "confidence": confidence, **meta})
+    try:
+        data = request.get_json(silent=True) or {}
+        url = data.get("url", "")
+        result, confidence, meta = multi_stage_predict(url)
+        return jsonify({"result": result, "confidence": confidence, **meta})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/predict/all", methods=["POST"])
 def predict_all():
-    data = request.get_json()
-    text = data.get("text", "")
-    result, confidence, meta = all_models_predict(text)
-    return jsonify({"result": result, "confidence": confidence, **meta})
+    try:
+        data = request.get_json(silent=True) or {}
+        text = data.get("text", "")
+        result, confidence, meta = all_models_predict(text)
+        return jsonify({"result": result, "confidence": confidence, **meta})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/predict/image", methods=["POST"])
 def predict_image():
-    if "file" not in request.files:
-        return jsonify({"error": "No image uploaded"}), 400
+    try:
+        if "file" not in request.files:
+            return jsonify({"error": "No image uploaded"}), 400
 
-    file = request.files["file"]
-    text = extract_text_from_image(file)
+        file = request.files["file"]
+        text = extract_text_from_image(file)
 
-    if text.strip() == "":
-        return jsonify({"result": "No text found in image", "confidence": 0})
+        if text.strip() == "":
+            return jsonify({"result": "No text found in image", "confidence": 0})
 
-    result, confidence, meta = multi_stage_predict(text)
-    return jsonify({"result": result, "confidence": confidence, **meta})
+        result, confidence, meta = multi_stage_predict(text)
+        return jsonify({"result": result, "confidence": confidence, **meta})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/predict/pdf", methods=["POST"])
 def predict_pdf():
-    if "file" not in request.files:
-        return jsonify({"error": "No PDF uploaded"}), 400
+    try:
+        if "file" not in request.files:
+            return jsonify({"error": "No PDF uploaded"}), 400
 
-    file = request.files["file"]
-    filename = secure_filename(file.filename)
-    temp_path = "temp_" + filename
+        file = request.files["file"]
+        filename = secure_filename(file.filename)
+        temp_path = "temp_" + filename
 
-    file.save(temp_path)
+        file.save(temp_path)
 
-    extracted_text = extract_text_from_pdf(temp_path)
-    os.remove(temp_path)
+        extracted_text = extract_text_from_pdf(temp_path)
+        os.remove(temp_path)
 
-    if extracted_text.strip() == "":
-        return jsonify({"result": "No text found in PDF", "confidence": 0})
+        if extracted_text.strip() == "":
+            return jsonify({"result": "No text found in PDF", "confidence": 0})
 
-    result, confidence, meta = multi_stage_predict(extracted_text)
-    return jsonify({"result": result, "confidence": confidence, **meta})
+        result, confidence, meta = multi_stage_predict(extracted_text)
+        return jsonify({"result": result, "confidence": confidence, **meta})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # ---------------- RUN ---------------- #
 

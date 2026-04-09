@@ -13,6 +13,9 @@ Thumbs.db
 !final_vectorizer.pkl
 !final_model.pkl
 !label_encoder.pkl
+!final_vectorizer_v2.pkl
+!final_model_v2.pkl
+!label_encoder_v2.pkl
 !url_vectorizer.pkl
 !url_model.pkl
 !url_label_encoder.pkl
