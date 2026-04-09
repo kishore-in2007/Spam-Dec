@@ -157,13 +157,23 @@ const baseInput = document.getElementById("apiBase");
 const stored = localStorage.getItem("SPAMDECK_API_BASE");
 baseInput.value = stored || "";
 
+function normalizeBaseUrl(raw) {
+  let val = (raw || "").trim();
+  if (!val) return "";
+  // Remove trailing slashes
+  val = val.replace(/\/+$/, "");
+  return val;
+}
+
 function getBaseUrl() {
-  const val = (baseInput.value || "").trim();
+  const val = normalizeBaseUrl(baseInput.value);
   return val || "http://127.0.0.1:5000";
 }
 
 function saveBaseUrl() {
-  localStorage.setItem("SPAMDECK_API_BASE", (baseInput.value || "").trim());
+  const cleaned = normalizeBaseUrl(baseInput.value);
+  baseInput.value = cleaned;
+  localStorage.setItem("SPAMDECK_API_BASE", cleaned);
 }
 
 function showError(msg) {
