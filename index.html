@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpamDeck</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0f172a, #020617);
+      color: white;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 90px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 5px 0;
+      font-size: 36px;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      margin-bottom: 30px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .tab {
+      padding: 12px 22px;
+      border-radius: 12px;
+      background: #1e293b;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tab.active {
+      background: #0ea5e9;
+    }
+
+    .box {
+      background: #0b1220;
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 10px;
+      box-shadow: 0 0 20px rgba(14,165,233,0.2);
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-top: 10px;
+      background: #1e293b;
+      color: white;
+    }
+
+    .upload-area {
+      border: 2px dashed #0ea5e9;
+      border-radius: 15px;
+      padding: 40px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+      background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+      color: white;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    #preview {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" class="logo">
+  <h1>SpamDeck</h1>
+  <div class="subtitle">AI Powered Spam Detection System</div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('text', event)">📄 Text</div>
+    <div class="tab" onclick="showTab('url', event)">🔗 URL</div>
+    <div class="tab" onclick="showTab('image', event)">🖼 Image</div>
+  </div>
+
+  <div class="box">
+
+    <!-- TEXT -->
+    <div id="textTab">
+      <textarea id="textInput" rows="4" placeholder="Enter message text..."></textarea>
+      <button onclick="checkText()">Detect Spam</button>
+    </div>
+
+    <!-- URL -->
+    <div id="urlTab" style="display:none;">
+      <input type="text" id="urlInput" placeholder="Enter URL...">
+      <button onclick="checkURL()">Detect Spam</button>
+    </div>
+
+    <!-- IMAGE -->
+    <div id="imageTab" style="display:none;">
+      <div class="upload-area" onclick="document.getElementById('imageFile').click()">
+        Click to upload Image
+      </div>
+      <input type="file" id="imageFile" hidden accept="image/*" onchange="previewImage()">
+      <button onclick="checkImage()">Detect Spam</button>
+    </div>
+
+    <div class="result" id="result"></div>
+    <div id="preview"></div>
+
+  </div>
+</div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+
+function showTab(tab, event) {
+  document.getElementById("textTab").style.display = "none";
+  document.getElementById("urlTab").style.display = "none";
+  document.getElementById("imageTab").style.display = "none";
+
+  document.getElementById(tab + "Tab").style.display = "block";
+
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  event.target.classList.add("active");
+
+  document.getElementById("result").innerText = "";
+  document.getElementById("preview").innerHTML = "";
+}
+
+// TEXT
+async function checkText() {
+  const text = document.getElementById("textInput").value;
+
+  const res = await fetch(BASE_URL + "/predict/spam", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({text: text})
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerText =
+    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+}
+
+// URL
+async function checkURL() {
+  const url = document.getElementById("urlInput").value;
+
+  const res = await fetch(BASE_URL + "/predict/url", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({url: url})
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerText =
+    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+}
+
+// IMAGE
+async function checkImage() {
+  const file = document.getElementById("imageFile").files[0];
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(BASE_URL + "/predict/image", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerText =
+    "Result: " + data.result + " | Confidence: " + Number(data.confidence).toFixed(2) + "%";
+}
+
+// PREVIEW IMAGE
+function previewImage(){
+  const file = document.getElementById("imageFile").files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById("preview").innerHTML =
+      `<img src="${e.target.result}" style="max-width:100%;border-radius:12px;">`;
+  };
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>

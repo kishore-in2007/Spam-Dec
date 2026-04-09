@@ -1,0 +1,15 @@
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+*.zip
+*.h5
+*.pkl
+models/
+data/
+temp_*
